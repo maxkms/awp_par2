@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1DB954" />
+    <meta
+      name="description"
+      content="Información detallada sobre artistas en SpotifyExplorer"
+    />
+    <title>Artista - SpotifyExplorer</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <img src="images/logo.png" alt="SpotifyExplorer Logo" />
+          <h1>SpotifyExplorer</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="search.html">Buscar</a></li>
+            <li>
+              <a href="favorites.html" class="fav-link">
+                Favoritos
+                <span class="fav-icon"><i class="fas fa-heart"></i></span>
+                <span class="favorites-counter">0</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div id="artist-detail">
+          <!-- Será llenado dinámicamente con JS -->
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Cargando detalles del
+            artista...
+          </div>
+        </div>
+
+        <div id="top-tracks" class="tracks-section">
+          <!-- Será llenado dinámicamente con JS -->
+        </div>
+
+        <div id="artist-albums" class="tracks-section">
+          <!-- Será llenado dinámicamente con JS -->
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 SpotifyExplorer - Parcial 1. Konev MS</p>
+      </div>
+    </footer>
+
+    <!-- Contenedor para el botón de instalación -->
+    <div id="install-container" class="install-prompt" style="display: none">
+      <button id="installButton" class="btn install-btn">
+        <i class="fas fa-download"></i> Instalar App
+      </button>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Script para registrar el Service Worker -->
+    <script>
+      // Registrar el Service Worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("js/sw.js", { scope: "/" })
+            .then((reg) => console.log("Service Worker registrado!", reg))
+            .catch((err) => console.log("Error en Service Worker:", err));
+        });
+      }
+    </script>
+
+    <!-- Script para instalación de PWA -->
+    <script src="js/pwa-installer.js"></script>
+  </body>
+</html>

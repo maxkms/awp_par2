@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1DB954" />
+    <meta
+      name="description"
+      content="Explora tus artistas y canciones favoritas con esta aplicación Spotify"
+    />
+    <title>SpotifyExplorer</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png" />
+    <!-- Metatags para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="SpotifyExplorer" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <img src="images/logo.png" alt="SpotifyExplorer Logo" />
+          <h1>SpotifyExplorer</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="index.html" class="active">Inicio</a></li>
+            <li><a href="search.html">Buscar</a></li>
+            <li>
+              <a href="favorites.html" class="fav-link">
+                Favoritos
+                <span class="fav-icon"><i class="fas fa-heart"></i></span>
+                <span class="favorites-counter">0</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h2>Descubre el mundo de la música</h2>
+          <p>
+            Explora artistas, álbumes y canciones. Guarda tus favoritos para
+            acceder sin conexión.
+          </p>
+          <a href="search.html" class="btn">Comenzar a explorar</a>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <h2>Características</h2>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-search"></i></div>
+              <h3>Búsqueda avanzada</h3>
+              <p>
+                Encuentra artistas, álbumes y canciones con nuestra potente
+                herramienta de búsqueda.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-heart"></i></div>
+              <h3>Favoritos</h3>
+              <p>
+                Guarda tus hallazgos favoritos para acceder rápidamente en el
+                futuro.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-wifi-slash"></i></div>
+              <h3>Offline</h3>
+              <p>Accede a tus favoritos incluso sin conexión a internet.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-download"></i></div>
+              <h3>Instalable</h3>
+              <p>
+                Instala la aplicación en tu dispositivo para un acceso rápido.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="popular-section">
+        <div class="container">
+          <div class="section-header">
+            <h2>Artistas populares</h2>
+            <div class="carousel-controls">
+              <button id="prev-artists" class="control-btn">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button id="refresh-artists" class="control-btn">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+              <button id="next-artists" class="control-btn">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+          <div id="popular-artists" class="card-grid">
+            <!-- Será llenado dinámicamente con JS -->
+            <div class="loading">
+              <i class="fas fa-spinner fa-spin"></i> Cargando artistas
+              populares...
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 SpotifyExplorer - Parcial 1. Konev MS</p>
+      </div>
+    </footer>
+
+    <!-- Contenedor para el botón de instalación -->
+    <div id="install-container" class="install-prompt" style="display: none">
+      <button id="installButton" class="btn install-btn">
+        <i class="fas fa-download"></i> Instalar App
+      </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Script para registrar el Service Worker -->
+    <script>
+      // Registrar el Service Worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("js/sw.js", { scope: "/" })
+            .then((reg) => console.log("Service Worker registrado!", reg))
+            .catch((err) => console.log("Error en Service Worker:", err));
+        });
+      }
+    </script>
+
+    <!-- Script para instalación de PWA -->
+    <script src="js/pwa-installer.js"></script>
+  </body>
+</html>

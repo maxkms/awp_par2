@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Autorización Completada - SpotifyExplorer</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container" style="text-align: center; padding: 50px 0">
+      <h1>Autorización Completada</h1>
+      <p>Puedes cerrar esta ventana y volver a la aplicación.</p>
+      <script>
+        // Cerrar automáticamente la ventana después de la autorización
+        window.onload = function () {
+          setTimeout(function () {
+            window.close();
+          }, 2000);
+        };
+      </script>
+    </div>
+  </body>
+</html>
