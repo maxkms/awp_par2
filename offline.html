@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1DB954">
+    <title>Sin conexión - SpotifyExplorer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para la página offline */
+        .offline-hero {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .offline-content {
+            max-width: 600px;
+        }
+
+        .offline-icon {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+        }
+
+        .offline-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .offline-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .offline-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .offline-features {
+            padding: 4rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .feature-offline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-offline-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-offline-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-offline-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 12px 16px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .retry-section {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .retry-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .retry-button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .retry-button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .offline-title {
+                font-size: 2rem;
+            }
+            
+            .offline-subtitle {
+                font-size: 1rem;
+            }
+            
+            .offline-icon {
+                font-size: 4rem;
+            }
+            
+            .offline-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .connection-status {
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body class="offline">
+    <!-- Indicador de estado de conexión -->
+    <div class="connection-status">
+        <i class="fas fa-wifi-slash"></i>
+        Sin conexión a Internet
+    </div>
+
+    <header class="offline-mode">
+        <div class="container">
+            <div class="logo">
+                <img src="images/logo.png" alt="SpotifyExplorer Logo">
+                <h1>SpotifyExplorer</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="search.html">Buscar</a></li>
+                    <li>
+                        <a href="favorites.html" class="fav-link">
+                            Favoritos
+                            <span class="fav-icon"><i class="fas fa-heart"></i></span>
+                            <span class="favorites-counter" id="offline-fav-counter">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero section offline -->
+        <section class="offline-hero">
+            <div class="offline-content">
+                <div class="offline-icon">
+                    <i class="fas fa-wifi-slash"></i>
+                </div>
+                <h1 class="offline-title">Sin conexión a Internet</h1>
+                <p class="offline-subtitle">
+                    No te preocupes, aún puedes acceder a tu música favorita y explorar contenido guardado
+                </p>
+                <div class="offline-actions">
+                    <a href="favorites.html" class="btn">
+                        <i class="fas fa-heart"></i> Ver Favoritos
+                    </a>
+                    <button id="retry-connection" class="btn btn-outline">
+                        <i class="fas fa-sync-alt"></i> Reintentar conexión
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Funcionalidades disponibles offline -->
+        <section class="offline-features">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 1rem;">¿Qué puedes hacer sin conexión?</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">
+                    SpotifyExplorer funciona parcialmente sin conexión gracias a la tecnología PWA
+                </p>
+                
+                <div class="feature-offline-grid">
+                    <div class="feature-offline-card">
+                        <div class="feature-offline-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Acceder a Favoritos</h3>
+                        <p>Revisa todos tus artistas, álbumes y canciones favoritas guardados localmente.</p>
+                    </div>
+                    
+                    <div class="feature-offline-card">
+                        <div class="feature-offline-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Ver Valoraciones</h3>
+                        <p>Consulta y modifica las valoraciones que has dado a tu música favorita.</p>
+                    </div>
+                    
+                    <div class="feature-offline-card">
+                        <div class="feature-offline-icon">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <h3>Leer Comentarios</h3>
+                        <p>Lee todos los comentarios que has escrito sobre artistas y álbumes.</p>
+                    </div>
+                    
+                    <div class="feature-offline-card">
+                        <div class="feature-offline-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3>Contenido Cached</h3>
+                        <p>Accede a páginas y contenido que visitaste recientemente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de información -->
+        <section style="padding: 3rem 0; background-color: white;">
+            <div class="container">
+                <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                    <h2 style="margin-bottom: 1.5rem;">¿Por qué veo esta página?</h2>
+                    <div style="text-align: left; color: var(--text-light); line-height: 1.8;">
+                        <p style="margin-bottom: 1rem;">
+                            <strong>🌐 Sin conexión detectada:</strong> Tu dispositivo no puede conectarse a Internet en este momento.
+                        </p>
+                        <p style="margin-bottom: 1rem;">
+                            <strong>📱 Aplicación PWA:</strong> SpotifyExplorer está diseñado como una Progressive Web App que funciona parcialmente offline.
+                        </p>
+                        <p style="margin-bottom: 1rem;">
+                            <strong>💾 Datos guardados:</strong> Tus favoritos, valoraciones y comentarios están almacenados localmente en tu dispositivo.
+                        </p>
+                        <p>
+                            <strong>🔄 Sincronización automática:</strong> Cuando recuperes la conexión, todos tus datos se mantendrán seguros.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de reintento -->
+        <section class="retry-section">
+            <div class="container">
+                <h3 style="margin-bottom: 1rem;">¿Ya tienes conexión?</h3>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">
+                    Haz clic en el botón para verificar tu conexión y volver a la aplicación completa
+                </p>
+                <button id="retry-connection-main" class="retry-button">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Verificar conexión</span>
+                </button>
+                <div id="retry-status" style="margin-top: 1rem; font-size: 0.9rem;"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SpotifyExplorer - Modo Offline. Konev MS</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Actualizar contador de favoritos desde localStorage
+        function updateOfflineFavoritesCounter() {
+            try {
+                const favorites = JSON.parse(localStorage.getItem('spotifyFavorites') || '{"artists":[],"tracks":[],"albums":[]}');
+                const totalCount = favorites.artists.length + favorites.tracks.length + favorites.albums.length;
+                
+                const counter = document.getElementById('offline-fav-counter');
+                if (counter) {
+                    counter.textContent = totalCount;
+                }
+            } catch (error) {
+                console.error('Error al cargar favoritos:', error);
+            }
+        }
+
+        // Función para verificar conexión
+        async function checkConnection() {
+            const retryButtons = document.querySelectorAll('#retry-connection, #retry-connection-main');
+            const statusDiv = document.getElementById('retry-status');
+            
+            // Deshabilitar botones y mostrar spinner
+            retryButtons.forEach(btn => {
+                btn.disabled = true;
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-spinner loading-spinner';
+                }
+            });
+
+            if (statusDiv) {
+                statusDiv.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Verificando conexión...';
+                statusDiv.style.color = 'var(--text-light)';
+            }
+
+            try {
+                // Intentar conectar con el servidor
+                const response = await fetch('/manifest.json', {
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    signal: AbortSignal.timeout(10000)
+                });
+
+                if (response.ok) {
+                    // Conexión exitosa
+                    if (statusDiv) {
+                        statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ¡Conexión restaurada! Redirigiendo...';
+                        statusDiv.style.color = 'var(--primary-color)';
+                    }
+                    
+                    // Redirigir después de 1 segundo
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 1000);
+                } else {
+                    throw new Error('Respuesta no válida del servidor');
+                }
+            } catch (error) {
+                // Sin conexión
+                if (statusDiv) {
+                    statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Aún sin conexión. Intenta de nuevo en unos momentos.';
+                    statusDiv.style.color = '#dc3545';
+                }
+
+                // Rehabilitar botones
+                setTimeout(() => {
+                    retryButtons.forEach(btn => {
+                        btn.disabled = false;
+                        const icon = btn.querySelector('i');
+                        if (icon) {
+                            icon.className = 'fas fa-sync-alt';
+                        }
+                    });
+                }, 2000);
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            updateOfflineFavoritesCounter();
+
+            // Botones de reintento
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('#retry-connection') || e.target.closest('#retry-connection-main')) {
+                    e.preventDefault();
+                    checkConnection();
+                }
+            });
+
+            // Verificación automática cada 30 segundos
+            setInterval(() => {
+                // Solo verificar automáticamente si no hay botones deshabilitados
+                const retryButton = document.getElementById('retry-connection-main');
+                if (retryButton && !retryButton.disabled) {
+                    fetch('/manifest.json', { method: 'HEAD', cache: 'no-cache' })
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.href = '/index.html';
+                            }
+                        })
+                        .catch(() => {
+                            // Ignorar errores en verificación automática
+                        });
+                }
+            }, 30000);
+
+            // Verificar cuando la ventana obtiene foco
+            window.addEventListener('focus', () => {
+                const retryButton = document.getElementById('retry-connection-main');
+                if (retryButton && !retryButton.disabled) {
+                    setTimeout(checkConnection, 1000);
+                }
+            });
+
+            // Detectar cambios de estado de conexión del navegador
+            window.addEventListener('online', () => {
+                const statusDiv = document.getElementById('retry-status');
+                if (statusDiv) {
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ¡Conexión detectada! Redirigiendo...';
+                    statusDiv.style.color = 'var(--primary-color)';
+                }
+                setTimeout(() => {
+                    window.location.href = '/index.html';
+                }, 1000);
+            });
+        });
+
+        // Mostrar consejos útiles después de 10 segundos
+        setTimeout(() => {
+            const statusDiv = document.getElementById('retry-status');
+            if (statusDiv && statusDiv.innerHTML === '') {
+                statusDiv.innerHTML = '💡 Consejo: Verifica tu conexión WiFi o datos móviles';
+                statusDiv.style.color = 'var(--text-light)';
+            }
+        }, 10000);
+    </script>
+
+    <!-- Service Worker para funcionalidad offline -->
+    <script>
+        // Registrar el Service Worker si está disponible
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/js/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registrado en página offline:', registration);
+                })
+                .catch(error => {
+                    console.error('Error al registrar Service Worker:', error);
+                });
+        }
+    </script>
+</body>
+</html>
