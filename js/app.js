@@ -54,6 +54,15 @@ function initializeGlobalFeatures() {
 
     // Configurar atajo de teclado para búsqueda rápida
     setupKeyboardShortcuts();
+
+    // Forzar inicialización del sistema de rating después de un pequeño delay
+    setTimeout(() => {
+        if (window.ratingSystem) {
+            console.log('Sistema de valoraciones iniciado');
+            // Forzar la adición de componentes de rating
+            window.ratingSystem.addRatingComponents();
+        }
+    }, 1000);
 }
 
 // Manejar mensajes del Service Worker
@@ -209,6 +218,13 @@ function setupArtistsNavigation() {
                 
                 // Cachear los nuevos datos
                 cacheData(`popularArtists_${genre}`, result.artists.items);
+
+                // Forzar actualización de componentes de rating después de cargar contenido
+                setTimeout(() => {
+                    if (window.ratingSystem) {
+                        window.ratingSystem.addRatingComponents();
+                    }
+                }, 500);
             } catch (error) {
                 console.error('Error al cargar artistas:', error);
                 
@@ -302,6 +318,13 @@ function setupSearchPage() {
                 if (cachedData && !silent) {
                     searchResults.innerHTML = '';
                     ui.showSearchResults(cachedData);
+                    
+                    // Forzar actualización de componentes de rating
+                    setTimeout(() => {
+                        if (window.ratingSystem) {
+                            window.ratingSystem.addRatingComponents();
+                        }
+                    }, 500);
                 } else {
                     // Obtener datos de la API
                     const results = await spotifyAPI.search(query);
@@ -317,6 +340,13 @@ function setupSearchPage() {
                     const newUrl = new URL(window.location);
                     newUrl.searchParams.set('q', query);
                     window.history.replaceState({}, '', newUrl);
+
+                    // Forzar actualización de componentes de rating
+                    setTimeout(() => {
+                        if (window.ratingSystem) {
+                            window.ratingSystem.addRatingComponents();
+                        }
+                    }, 500);
                 }
             } catch (error) {
                 console.error('Error al buscar:', error);
@@ -414,6 +444,13 @@ async function loadArtistPage() {
 
         // Actualizar título de la página
         document.title = `${artist.name} - SpotifyExplorer`;
+
+        // Forzar actualización de componentes de rating
+        setTimeout(() => {
+            if (window.ratingSystem) {
+                window.ratingSystem.addRatingComponents();
+            }
+        }, 500);
     } catch (error) {
         console.error('Error al cargar la página de artista:', error);
         
@@ -470,6 +507,13 @@ async function loadAlbumPage() {
 
         // Actualizar título de la página
         document.title = `${album.name} - SpotifyExplorer`;
+
+        // Forzar actualización de componentes de rating
+        setTimeout(() => {
+            if (window.ratingSystem) {
+                window.ratingSystem.addRatingComponents();
+            }
+        }, 500);
     } catch (error) {
         console.error('Error al cargar la página de álbum:', error);
         
@@ -492,6 +536,13 @@ function loadFavoritesPage() {
     
     // Actualizar título de la página
     document.title = 'Favoritos - SpotifyExplorer';
+
+    // Forzar actualización de componentes de rating
+    setTimeout(() => {
+        if (window.ratingSystem) {
+            window.ratingSystem.addRatingComponents();
+        }
+    }, 500);
 }
 
 // Función para obtener datos de caché (mejorada)

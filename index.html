@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#1DB954" />
     <meta
       name="description"
-      content="Explora tus artistas y canciones favoritas con esta aplicación Spotify"
+      content="Explora tus artistas y canciones favoritas con esta aplicación Spotify. Funciona offline, permite valoraciones y compartir contenido."
     />
-    <title>SpotifyExplorer</title>
+    <title>SpotifyExplorer - Descubre música increíble</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="images/icons/icon-192x192.png" />
@@ -57,10 +57,17 @@
         <div class="container">
           <h2>Descubre el mundo de la música</h2>
           <p>
-            Explora artistas, álbumes y canciones. Guarda tus favoritos para
-            acceder sin conexión.
+            Explora artistas, álbumes y canciones. Guarda tus favoritos, comparte contenido y valora tu música. 
+            ¡Funciona incluso sin conexión a internet!
           </p>
-          <a href="search.html" class="btn">Comenzar a explorar</a>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+            <a href="search.html" class="btn">
+              <i class="fas fa-search"></i> Comenzar a explorar
+            </a>
+            <button id="quick-tour-btn" class="btn btn-outline">
+              <i class="fas fa-play"></i> Tour rápido
+            </button>
+          </div>
         </div>
       </section>
 
@@ -73,7 +80,7 @@
               <h3>Búsqueda avanzada</h3>
               <p>
                 Encuentra artistas, álbumes y canciones con nuestra potente
-                herramienta de búsqueda.
+                herramienta de búsqueda en tiempo real.
               </p>
             </div>
             <div class="feature-card">
@@ -81,20 +88,40 @@
               <h3>Favoritos</h3>
               <p>
                 Guarda tus hallazgos favoritos para acceder rápidamente en el
-                futuro.
+                futuro, incluso sin conexión.
               </p>
             </div>
             <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-star"></i></div>
+              <h3>Valoraciones</h3>
+              <p>Valora tu música favorita y agrega comentarios personales sobre artistas y álbumes.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-share-alt"></i></div>
+              <h3>Compartir</h3>
+              <p>Comparte tus descubrimientos musicales con amigos en redes sociales y mensajería.</p>
+            </div>
+            <div class="feature-card">
               <div class="feature-icon"><i class="fas fa-wifi-slash"></i></div>
-              <h3>Offline</h3>
-              <p>Accede a tus favoritos incluso sin conexión a internet.</p>
+              <h3>Modo offline</h3>
+              <p>Accede a tus favoritos, valoraciones y comentarios incluso sin conexión a internet.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-bell"></i></div>
+              <h3>Notificaciones</h3>
+              <p>Recibe notificaciones sobre nuevos lanzamientos y recomendaciones personalizadas.</p>
             </div>
             <div class="feature-card">
               <div class="feature-icon"><i class="fas fa-download"></i></div>
               <h3>Instalable</h3>
               <p>
-                Instala la aplicación en tu dispositivo para un acceso rápido.
+                Instala la aplicación en tu dispositivo para un acceso rápido como una app nativa.
               </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+              <h3>Responsive</h3>
+              <p>Diseño optimizado que se adapta perfectamente a cualquier dispositivo y tamaño de pantalla.</p>
             </div>
           </div>
         </div>
@@ -105,13 +132,13 @@
           <div class="section-header">
             <h2>Artistas populares</h2>
             <div class="carousel-controls">
-              <button id="prev-artists" class="control-btn">
+              <button id="prev-artists" class="control-btn" title="Género anterior">
                 <i class="fas fa-chevron-left"></i>
               </button>
-              <button id="refresh-artists" class="control-btn">
+              <button id="refresh-artists" class="control-btn" title="Actualizar">
                 <i class="fas fa-sync-alt"></i>
               </button>
-              <button id="next-artists" class="control-btn">
+              <button id="next-artists" class="control-btn" title="Siguiente género">
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
@@ -125,11 +152,46 @@
           </div>
         </div>
       </section>
+
+      <!-- Sección de estadísticas de uso -->
+      <section style="padding: 3rem 0; background-color: #f8f9fa; text-align: center;">
+        <div class="container">
+          <h2>Tu actividad en SpotifyExplorer</h2>
+          <div id="user-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+            <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              <div style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;">
+                <i class="fas fa-heart"></i>
+              </div>
+              <div id="total-favorites" style="font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);">0</div>
+              <div style="font-size: 0.9rem; color: var(--text-light);">Favoritos</div>
+            </div>
+            <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              <div style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;">
+                <i class="fas fa-star"></i>
+              </div>
+              <div id="total-ratings" style="font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);">0</div>
+              <div style="font-size: 0.9rem; color: var(--text-light);">Valoraciones</div>
+            </div>
+            <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              <div style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;">
+                <i class="fas fa-comment"></i>
+              </div>
+              <div id="total-comments" style="font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);">0</div>
+              <div style="font-size: 0.9rem; color: var(--text-light);">Comentarios</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer>
       <div class="container">
-        <p>&copy; 2025 SpotifyExplorer - Parcial 1. Konev MS</p>
+        <p>&copy; 2025 SpotifyExplorer - Parcial II. Konev MS</p>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          <span id="connection-status">🌐 Online</span> • 
+          <span id="app-version">v2.0</span> • 
+          <button id="show-debug-info" style="background: none; border: none; color: inherit; text-decoration: underline; cursor: pointer; font-size: inherit;">Debug Info</button>
+        </div>
       </div>
     </footer>
 
@@ -140,10 +202,69 @@
       </button>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts en orden de dependencia -->
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/sharing.js"></script>
+    <script src="js/network-status.js"></script>
+    <script src="js/rating-system.js"></script>
     <script src="js/app.js"></script>
+
+    <!-- Script para tour rápido -->
+    <script>
+      document.getElementById('quick-tour-btn')?.addEventListener('click', () => {
+        ui.showMessage('🎵 Usa la búsqueda para encontrar música, guarda favoritos ❤️ y comparte 📤 tus descubrimientos. ¡Funciona offline! 📱', 'info');
+      });
+
+      // Actualizar estadísticas de usuario
+      function updateUserStats() {
+        try {
+          const favorites = JSON.parse(localStorage.getItem('spotifyFavorites') || '{"artists":[],"tracks":[],"albums":[]}');
+          const ratings = JSON.parse(localStorage.getItem('spotifyRatings') || '{}');
+          const comments = JSON.parse(localStorage.getItem('spotifyComments') || '{}');
+
+          const totalFavorites = favorites.artists.length + favorites.tracks.length + favorites.albums.length;
+          const totalRatings = Object.keys(ratings).length;
+          const totalComments = Object.keys(comments).reduce((total, key) => total + comments[key].length, 0);
+
+          document.getElementById('total-favorites').textContent = totalFavorites;
+          document.getElementById('total-ratings').textContent = totalRatings;
+          document.getElementById('total-comments').textContent = totalComments;
+        } catch (error) {
+          console.error('Error al actualizar estadísticas:', error);
+        }
+      }
+
+      // Actualizar estado de conexión
+      function updateConnectionStatus() {
+        const statusElement = document.getElementById('connection-status');
+        if (statusElement) {
+          statusElement.textContent = navigator.onLine ? '🌐 Online' : '📱 Offline';
+        }
+      }
+
+      // Event listeners
+      document.addEventListener('DOMContentLoaded', () => {
+        updateUserStats();
+        updateConnectionStatus();
+
+        // Actualizar estadísticas cada 30 segundos
+        setInterval(updateUserStats, 30000);
+
+        // Escuchar cambios de conexión
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+
+        // Debug info
+        document.getElementById('show-debug-info')?.addEventListener('click', () => {
+          if (window.spotifyExplorerDebug) {
+            window.spotifyExplorerDebug.showUsageStats();
+            ui.showMessage('Información de debug mostrada en la consola (F12)', 'info');
+          }
+        });
+      });
+    </script>
 
     <!-- Script para registrar el Service Worker -->
     <script>
@@ -152,7 +273,19 @@
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("js/sw.js", { scope: "/" })
-            .then((reg) => console.log("Service Worker registrado!", reg))
+            .then((reg) => {
+              console.log("Service Worker registrado!", reg);
+              
+              // Escuchar actualizaciones del SW
+              reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    ui.showMessage('Nueva versión disponible. Recarga la página para actualizar.', 'info');
+                  }
+                });
+              });
+            })
             .catch((err) => console.log("Error en Service Worker:", err));
         });
       }

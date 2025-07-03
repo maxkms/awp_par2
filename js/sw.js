@@ -252,32 +252,26 @@ self.addEventListener('notificationclick', event => {
 self.addEventListener('notificationaction', event => {
     console.log('Acción de notificación:', event.action);
     
-    // Llamar al handler estático de NotificationManager
-    if (typeof NotificationManager !== 'undefined' && NotificationManager.handleNotificationAction) {
-        NotificationManager.handleNotificationAction(event);
-    } else {
-        // Fallback si la clase no está disponible
-        const action = event.action;
-        const data = event.notification.data;
+    const action = event.action;
+    const data = event.notification.data;
 
-        event.notification.close();
+    event.notification.close();
 
-        switch (action) {
-            case 'explore':
-            case 'check-recommendation':
-            case 'explore-genres':
-                event.waitUntil(
-                    clients.openWindow(data && data.url ? data.url : '/search.html')
-                );
-                break;
-            case 'dismiss':
-                // No hacer nada, solo cerrar
-                break;
-            default:
-                event.waitUntil(
-                    clients.openWindow('/')
-                );
-        }
+    switch (action) {
+        case 'explore':
+        case 'check-recommendation':
+        case 'explore-genres':
+            event.waitUntil(
+                clients.openWindow(data && data.url ? data.url : '/search.html')
+            );
+            break;
+        case 'dismiss':
+            // No hacer nada, solo cerrar
+            break;
+        default:
+            event.waitUntil(
+                clients.openWindow('/')
+            );
     }
 });
 
